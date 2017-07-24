@@ -21,10 +21,12 @@ io.on('connection', (socket) => {
     // socket.broadcast.emit from Admin "New user joined".
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user has joined the chat'));
 
-    socket.on('createMessage', function (messageContent) {
-        console.log('New Message recieved at Server', messageContent);
+    socket.on('createMessage', function (messageContent, callback) {
+        console.log('createMessage', messageContent);
+       
         //  io.emit will broadcast the message to each and every socket including the one who sent it.
-        io.emit('newMessage', generateMessage(message.from, message.text));
+        io.emit('newMessage', generateMessage(messageContent.from, messageContent.text));
+        callback('This is from the server');
 
         //socket.broadcast is used to emit the message to everyone but the origininating socket/client.
         // socket.broadcast.emit('newMessage', {
