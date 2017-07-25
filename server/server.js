@@ -33,22 +33,18 @@ io.on('connection', (socket) => {
 
 
     socket.on('createMessage', function (messageContent, callback) {
-        console.log('createMessage', messageContent);
-
-        //  io.emit will broadcast the message to each and every socket including the one who sent it.
-        io.emit('newMessage', generateMessage(messageContent.from, messageContent.text));
+        var user = users.getUser(socket.id);
+        if (user && isRealString(messageContent.text)) {
+            io.to(user.room).emit('newMessage', generateMessage(user.name, messageContent.text));
+        }
         callback();
-
-        //socket.broadcast is used to emit the message to everyone but the origininating socket/client.
-        // socket.broadcast.emit('newMessage', {
-        //     from: messageContent.from,
-        //     text: messageContent.text,
-        //     createdAt: (new Date().getTime()),
-        // })
     });
 
     socket.on('createLocationMessage', (coords) => {
-        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+        var user = users.getUser(socket.id);
+        if (user) {
+            io.emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
     });
 
     socket.on('disconnect', () => {
