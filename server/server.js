@@ -3,11 +3,12 @@ const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
 const publicPath = path.join(__dirname, '../public');
-const {generateMessage, generateLocationMessage} = require('./utils/message');
+const { generateMessage, generateLocationMessage } = require('./utils/message');
 var app = express();
 var server = http.createServer(app);
 var port = process.env.PORT || 3000;
 var io = socketIO(server);
+var { isRealString } = require('./utils/validation');
 
 app.use(express.static(publicPath));
 
@@ -20,9 +21,18 @@ io.on('connection', (socket) => {
     // socket.broadcast.emit from Admin "New user joined".
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user has joined the chat'));
 
+    socket.on('join', (params, callback) => {
+        if (!isRealString(params.name) || !isRealString(params.room)) {
+            callback("Name and Room name are required");
+        }
+       
+        callback();
+    });
+
+
     socket.on('createMessage', function (messageContent, callback) {
         console.log('createMessage', messageContent);
-       
+
         //  io.emit will broadcast the message to each and every socket including the one who sent it.
         io.emit('newMessage', generateMessage(messageContent.from, messageContent.text));
         callback();
@@ -35,7 +45,7 @@ io.on('connection', (socket) => {
         // })
     });
 
-    socket.on('createLocationMessage', (coords)=>{
+    socket.on('createLocationMessage', (coords) => {
         io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
     });
 
