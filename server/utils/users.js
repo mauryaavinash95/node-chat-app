@@ -5,6 +5,9 @@ class Users {
 
     addUser(id, name, room) {
         var user = { id, name, room };
+        if(this.users.includes(id)){
+            return null;
+        }
         this.users.push(user);
         return user;
     }
