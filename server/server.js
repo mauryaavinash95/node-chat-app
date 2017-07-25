@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
        
         //  io.emit will broadcast the message to each and every socket including the one who sent it.
         io.emit('newMessage', generateMessage(messageContent.from, messageContent.text));
-        callback('This is from the server');
+        callback();
 
         //socket.broadcast is used to emit the message to everyone but the origininating socket/client.
         // socket.broadcast.emit('newMessage', {
