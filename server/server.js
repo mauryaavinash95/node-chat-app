@@ -4,7 +4,6 @@ const socketIO = require('socket.io');
 const http = require('http');
 const publicPath = path.join(__dirname, '../public');
 const {generateMessage, generateLocationMessage} = require('./utils/message');
-// console.log(publicPath);
 var app = express();
 var server = http.createServer(app);
 var port = process.env.PORT || 3000;
