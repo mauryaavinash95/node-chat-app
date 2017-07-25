@@ -11,7 +11,7 @@ socket.on('newMessage', function (message) {
     jQuery('#messages').append(li);
 });
 
-socket.on('newLocationMessage', function(message){
+socket.on('newLocationMessage', function (message) {
     var li = jQuery('<li></li>');
     var a = jQuery('<a target="_">My current location</a>');
     li.text(`${message.from}: `);
@@ -45,11 +45,11 @@ locationButton.on('click', function () {
     navigator.geolocation.getCurrentPosition(
         function (position) {
             console.log(position);
-            alert(position);
-            // socket.emit('createLocationMessage', {
-            //     latitude: position.coords.latitude,
-            //     longitude: position.coords.longitude,
-            // })
+            //alert(position);
+            socket.emit('createLocationMessage', {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+            })
         }, function (err) {
             alert('Unable to fetch your coordinates', err);
         });
