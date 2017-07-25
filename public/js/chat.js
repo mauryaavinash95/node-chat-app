@@ -56,6 +56,14 @@ socket.on('newLocationMessage', function (message) {
     scrollToBottom();
 });
 
+socket.on('updateUserList', function (users) {
+    var ol = jQuery('<ol></ol>');
+    users.forEach(function (user) {
+        ol.append(jQuery('<li></li>').text(user));
+    });
+    jQuery('#users').html(ol);
+});
+
 socket.on('disconnect', function () {
     console.log("Disconnected from the server");
 });
